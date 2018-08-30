@@ -20,7 +20,7 @@ import pathlib
 import ruamel.yaml
 import tomputils.util as tutil
 import multiprocessing_logging
-
+import requests
 
 CONFIG_FILE_ENV = 'WRT_CONFIG_FILE'
 URL_TMPL = Template("http://${address}:${port}/state.xml"
@@ -50,6 +50,7 @@ def poke_relay(relay):
     try:
         url = URL_TMPL.substitute(relay)
         logger.debug("Poking %s at %s", relay['name'], url)
+        r = requests.get(url, timeout=relay['timeout'])
     finally:
         for handler in logger.handlers:
             handler.flush()
