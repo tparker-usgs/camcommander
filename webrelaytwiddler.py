@@ -8,32 +8,24 @@
 #   Tom Parker <tparker@usgs.gov>
 
 """ Poke web relays to initial camera upload."""
-from datetime import timedelta, datetime
 from string import Template
 import signal
 import logging
-import os
-import sys
-import socket
-import struct
-import pathlib
-from urllib.parse import urlparse
 import errno
 from multiprocessing import Process
 import time
 import math
+import pathlib
 
 import ruamel.yaml
 import tomputils.util as tutil
-import pycurl
-import humanize
 import multiprocessing_logging
 
 
 CONFIG_FILE_ENV = 'WRT_CONFIG_FILE'
 URL_TMPL = Template("http://${address}:${port}/state.xml"
-                   "?relay${relayidx}State=2"
-                   "&pulseTime${relayidx}=${pulse_duration}")
+                    "?relay${relayidx}State=2"
+                    "&pulseTime${relayidx}=${pulse_duration}")
 
 
 def parse_config():
@@ -93,7 +85,6 @@ def main():
     except KeyError:
         msg = "Environment variable %s unset, exiting.".format(CONFIG_FILE_ENV)
         tutil.exit_with_error(msg)
-
 
     procs = poke_relays(config['relays'])
     for proc in procs:
