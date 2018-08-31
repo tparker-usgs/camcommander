@@ -57,8 +57,7 @@ def poke_relay(relay):
         r.raise_for_status()
         logger.info("Poked.")
     except requests.exceptions.RequestException as e:
-        logger.error("%s resisted with a status code %d.", relay['name'],
-                     r.status_code)
+        logging.exception("%s resisted.", relay['name'])
     finally:
         for handler in logger.handlers:
             handler.flush()
