@@ -77,7 +77,7 @@ def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     global logger
-    logger = tutil.setup_logging("webrelaytwiddler errors")
+    logger = tutil.setup_logging("webrelaypoker errors")
     multiprocessing_logging.install_mp_handler()
 
     config = None
