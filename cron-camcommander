@@ -1,2 +1,2 @@
 * * * * * python2 /usr/local/bin/single.py -c /app/camcommander/downloadconfigs.sh
-* * * * * webrelaypoker.py
+* * * * * /app/camcommander/webrelaypoker.py
