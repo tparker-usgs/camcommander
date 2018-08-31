@@ -1,2 +1,2 @@
-* * * * * downloadconfigs.sh
+* * * * * python2 /usr/local/bin/single -c downloadconfigs.sh
 * * * * * webrelaypoker.py
