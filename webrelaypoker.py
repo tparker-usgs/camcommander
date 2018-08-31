@@ -22,14 +22,17 @@ import tomputils.util as tutil
 import multiprocessing_logging
 import requests
 
-CONFIG_FILE_ENV = 'WRT_CONFIG_FILE'
+
+CONFIG_FILE_ENV = 'WRP_CONFIG_FILE'
+DEFAULT_CONFIG_FILE = '/tmp/wrp.yaml'
 URL_TMPL = Template("http://${address}:${port}/state.xml"
                     "?relay${relayidx}State=2"
                     "&pulseTime${relayidx}=${pulse_duration}")
 
 
 def parse_config():
-    config_file = pathlib.Path(tutil.get_env_var(CONFIG_FILE_ENV))
+    config_file = pathlib.Path(tutil.get_env_var(CONFIG_FILE_ENV,
+                                                 default=DEFAULT_CONFIG_FILE))
     yaml = ruamel.yaml.YAML()
     config = None
     try:
