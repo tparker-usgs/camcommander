@@ -4,8 +4,8 @@
 # can't use onbuild due to SSL visibility
 FROM python:3.7
 
-WORKDIR /root/.pip
-ADD support/pip.conf .
+#WORKDIR /root/.pip
+#ADD support/pip.conf .
 
 WORKDIR /root/certs
 add support/DOIRootCA2.cer .
