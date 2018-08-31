@@ -72,10 +72,15 @@ def poke_relays(relays):
             logger.debug("Skipping %s, it's disabled.", relay['name'])
             continue
 
-        if minute % relay['interval'] == relay['minute_offset']:
+        minute_offset = minute % relay['interval']
+        if minute_offset == relay['minute_offset']:
             p = Process(target=poke_relay, args=(relay,))
             procs.append(p)
             p.start()
+        else:
+            logger.debug("Skipping %s, %d %% %d == %d not %d", relay['name'],
+                         minute, relay['interval'], minute_offset,
+                         relay['minute_offset'])
 
     return procs
 
