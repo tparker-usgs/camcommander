@@ -54,6 +54,11 @@ def poke_relay(relay):
         url = URL_TMPL.substitute(relay)
         logger.debug("Poking %s at %s", relay['name'], url)
         r = requests.get(url, timeout=relay['timeout'])
+        if r.status_code == r.ok:
+            logger.debug("Poked.")
+        else:
+            logger.error("%s resisted with a status code %d.". relay['name'],
+                         r.status_code)
     finally:
         for handler in logger.handlers:
             handler.flush()
