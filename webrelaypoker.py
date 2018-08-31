@@ -64,12 +64,25 @@ def poke_relay(relay):
             handler.flush()
 
 
+def validate_relay(relay):
+    if relay['minute_offset'] >= relay['interval']:
+        logger.error("minute_offset must be smaller than interval."
+                     "(%d >= %d)", relay['minute_offset'],
+                     relay['interval'])
+        return False
+
+    if relay['disabled']:
+        logger.debug("Skipping %s, it's disabled.", relay['name'])
+        return False
+
+    return True
+
+
 def poke_relays(relays):
     procs = []
     minute = math.floor(time.time() / 60)
     for relay in relays:
-        if relay['disabled']:
-            logger.debug("Skipping %s, it's disabled.", relay['name'])
+        if not validate_relay(relay):
             continue
 
         minute_offset = minute % relay['interval']
