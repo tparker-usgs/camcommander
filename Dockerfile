@@ -4,6 +4,8 @@
 # can't use onbuild due to SSL visibility
 FROM python:3.7
 
+RUN apt-get update && apt-get install rsync
+
 #WORKDIR /root/.pip
 #ADD support/pip.conf .
 
