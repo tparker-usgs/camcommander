@@ -16,6 +16,7 @@ from multiprocessing import Process
 import time
 import math
 import pathlib
+import sys
 
 import ruamel.yaml
 import tomputils.util as tutil
@@ -30,9 +31,9 @@ URL_TMPL = Template("http://${address}:${port}/state.xml"
                     "&pulseTime${relayidx}=${pulse_duration}")
 
 
-def parse_config():
-    config_file = pathlib.Path(tutil.get_env_var(CONFIG_FILE_ENV,
-                                                 default=DEFAULT_CONFIG_FILE))
+def parse_config(config_path):
+    logger.debug("Parsing config %s", config_path)
+    config_file = pathlib.Path(config_path)
     yaml = ruamel.yaml.YAML()
     config = None
     try:
@@ -111,13 +112,10 @@ def main():
     logger = tutil.setup_logging("webrelaypoker errors")
     multiprocessing_logging.install_mp_handler()
 
-    config = None
-    try:
-        config = parse_config()
-    except KeyError:
-        msg = "Environment variable %s unset, exiting.".format(CONFIG_FILE_ENV)
-        tutil.exit_with_error(msg)
+    if len(sys.argv) < 2:
+        tutil.exit_with_error("usage: webrelaypoker.py config")
 
+    config = parse_config(sys.argv[1])
     procs = poke_relays(config['relays'])
     for proc in procs:
         proc.join()

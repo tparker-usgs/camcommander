@@ -1,2 +1,2 @@
-* * * * * python2 /usr/local/bin/single.py -c /app/camcommander/downloadconfigs.sh
-* * * * * /app/camcommander/webrelaypoker.py
+* * * * * python2 single.py -c configupdater.py --url=$WRP_CONFIG_URL --user=$USER --passwd=$PASSWD $WRP_CONFIG_PATH
+* * * * * /app/camcommander/webrelaypoker.py $WRP_CONFIG_PATH

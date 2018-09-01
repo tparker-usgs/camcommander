@@ -31,7 +31,7 @@ def _arg_parse():
     group.add_argument('--url', help='URL of config file')
     parser.add_argument("--user", help="Username")
     parser.add_argument("--passwd", help="password")
-    parser.add_argument("config", help="Local config path", required=True)
+    parser.add_argument("config", help="Local config path")
 
     return parser.parse_args()
 
