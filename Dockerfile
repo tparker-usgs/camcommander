@@ -29,9 +29,11 @@ ADD requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 ADD VERSION .
+ADD cron-camcommander .
+
 ADD webrelaypoker.py .
 ADD downloadconfigs.sh .
-ADD cron-camcommander .
-RUN chmod 755 *.py
+ADD configupdater.py .
+RUN chmod 755 *.py *.sh
 
 CMD ["/usr/local/bin/supercronic","/app/camcommander/cron-camcommander"]
