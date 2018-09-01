@@ -47,7 +47,7 @@ def checkout_config(args):
 
 def download_config(args):
     try:
-        r = requests.get(args.url, username=args.user, password=args.passwd)
+        r = requests.get(args.url, auth=(args.user, args.passwd))
         r.raise_for_status()
         return r.text
     except requests.exceptions.RequestException as e:
