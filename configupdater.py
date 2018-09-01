@@ -29,9 +29,9 @@ def _arg_parse():
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--svnurl', help='Subversion URL of config file')
     group.add_argument('--url', help='URL of config file')
-    parser.add_argument("--config", help="Local config path", required=True)
     parser.add_argument("--user", help="Username")
     parser.add_argument("--passwd", help="password")
+    parser.add_argument("config", help="Local config path", required=True)
 
     return parser.parse_args()
 
