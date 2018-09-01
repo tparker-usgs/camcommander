@@ -24,8 +24,6 @@ import multiprocessing_logging
 import requests
 
 
-CONFIG_FILE_ENV = 'WRP_CONFIG_FILE'
-DEFAULT_CONFIG_FILE = '/tmp/wrp.yaml'
 URL_TMPL = Template("http://${address}:${port}/state.xml"
                     "?relay${relayidx}State=2"
                     "&pulseTime${relayidx}=${pulse_duration}")
