@@ -28,6 +28,7 @@ import svn.remote
 
 CONFIG_PATH = '/tmp/configupdater.yaml'
 
+
 def _arg_parse():
     description = "I look after a config file."
     parser = argparse.ArgumentParser(description=description)
@@ -105,9 +106,8 @@ def update_remotefile(config):
     config_str = None
     try:
         r = requests.get(config['source'], auth=(config['user'],
-                                              config['passwd']))
+                                                 config['passwd']))
         r.raise_for_status()
-
 
         config_str = r.text
     except requests.exceptions.RequestException as e:
