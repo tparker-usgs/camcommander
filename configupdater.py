@@ -157,13 +157,7 @@ def parse_config(config_path):
     return config
 
 
-def main():
-    # let ctrl-c work as it should.
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
-
-    global logger
-    logger = tutil.setup_logging("CONFIG FILE ERROR")
-    args = _arg_parse()
+def bootstrap_config(args):
     bootstrap = {
         'name': 'bootstrap',
         'type': 'remotefile',
@@ -174,7 +168,18 @@ def main():
     }
     update_config(bootstrap)
 
-    my_config = parse_config(CONFIG_PATH)
+    return parse_config(CONFIG_PATH)
+
+
+def main():
+    # let ctrl-c work as it should.
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+    global logger
+    logger = tutil.setup_logging("CONFIG FILE ERROR")
+    args = _arg_parse()
+
+    my_config = bootstrap_config(args)
     for config in my_config['configs']:
         config = update_config(config)
 
