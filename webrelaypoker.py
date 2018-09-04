@@ -58,7 +58,10 @@ def poke_relay(relay):
     except requests.exceptions.ConnectionError:
         # The web relay doesn't return headers when sent a sate.xml request
         # urllib3 doesn't support HTTP/0.9 requests. What's to be done?
-        logging.info("Web relay connection error. This is normal.")
+        msg = "Web relay connection error. This is normal as the webrelay" \
+              + "doesn't provide a valid HTTP response to state.xml " \
+              + " requests, but it may also obscure other problems."
+        logging.info(msg)
     except requests.exceptions.ReadTimeout as e:
         logging.info("Time-out poking %s", relay['name'])
     except requests.exceptions.RequestException as e:
