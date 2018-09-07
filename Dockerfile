@@ -5,6 +5,7 @@
 FROM python:3.7
 
 RUN apt-get update && apt-get install -y rsync
+RUN useradd avoauto
 
 #WORKDIR /root/.pip
 #ADD support/pip.conf .
