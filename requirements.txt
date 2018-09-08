@@ -1,6 +1,6 @@
 request
 ruamel_yaml
-tomputils>=1.8.0
+tomputils>=1.9.0
 single
 multiprocessing-logging
 svn

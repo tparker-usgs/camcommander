@@ -1,2 +1,2 @@
-* * * * * python2 /usr/local/bin/single.py -c configupdater.py --url=$WRP_CONFIG_URL --user=$USER --passwd=$PASSWD $WRP_CONFIG_PATH
+*/5 * * * * configupdater.py --url=$CONFIGUPDATER_URL --user=$USER --passwd=$PASSWD $CONFIGUPDATER_CONFIG
 * * * * * webrelaypoker.py $WRP_CONFIG_PATH
