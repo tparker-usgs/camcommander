@@ -29,25 +29,6 @@ URL_TMPL = Template("http://${address}:${port}/state.xml"
                     "&pulseTime${relayidx}=${pulse_duration}")
 
 
-def parse_config(config_path):
-    logger.debug("Parsing config %s", config_path)
-    config_file = pathlib.Path(config_path)
-    yaml = ruamel.yaml.YAML()
-    config = None
-    try:
-        config = yaml.load(config_file)
-    except ruamel.yaml.parser.ParserError as e1:
-        logger.error("Cannot parse config file")
-        tutil.exit_with_error(e1)
-    except OSError as e:
-        if e.errno == errno.EEXIST:
-            logger.error("Cannot read config file %s", config_file)
-            tutil.exit_with_error(e)
-        else:
-            raise
-    return config
-
-
 def poke_relay(relay):
     try:
         url = URL_TMPL.substitute(relay)
@@ -116,7 +97,7 @@ def main():
     if len(sys.argv) < 2:
         tutil.exit_with_error("usage: webrelaypoker.py config")
 
-    config = parse_config(sys.argv[1])
+    config = tutil.parse_config(sys.argv[1])
     procs = poke_relays(config['relays'])
     for proc in procs:
         proc.join()
