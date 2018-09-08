@@ -1,2 +1,2 @@
-*/5 * * * * configupdater.py --url=$CONFIGUPDATER_URL --user=$USER --passwd=$PASSWD $CONFIGUPDATER_CONFIG
+*/5 * * * * configupdater --url=$CONFIGUPDATER_URL --user=$USER --passwd=$PASSWD $CONFIGUPDATER_CONFIG
 * * * * * webrelaypoker.py $WRP_CONFIG_PATH
