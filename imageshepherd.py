@@ -8,21 +8,14 @@
 #   Tom Parker <tparker@usgs.gov>
 
 """ fetch and ship webcam images."""
-from string import Template
 import signal
 import logging
-import errno
 from multiprocessing import Process
-import time
-import math
-import pathlib
 import sys
 import os
 
-import ruamel.yaml
 import tomputils.util as tutil
 import multiprocessing_logging
-import requests
 
 
 CONFIG_FILE_ENV = 'CP_CONFIG_FILE'
@@ -34,13 +27,14 @@ global_config = None
 def get_new_images(config):
     rsync = ['rsync']
     rsync.append("--prune-empty-dirs --compress --archive")
-    rsync.append('-rsh "ssh -i {}"'.format(config['ssh_key']))
+    rsync.append('--rsh "ssh -i {}"'.format(config['ssh_key']))
     rsync.append("{}@{}:".format(config['user'], config['address']))
     rsync.append(os.path.join(tutil.get_env_var('SCRATCH_DIR'),
                               config['name']))
-
-    output = os.popen(" ".join(rsync), 'r')
-    logger.debug(output.read())
+    rsync_cmd = " ".join(rsync)
+    logger.debug("rsync: %s", rsync_cmd)
+    # output = os.popen(rsync_cmd, 'r')
+    # logger.debug(output.read())
     return False
 
 
@@ -70,11 +64,14 @@ def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     global logger
-    logger = tutil.setup_logging("webrelaypoker errors")
+    logger = tutil.setup_logging("imageshepherd errors")
     multiprocessing_logging.install_mp_handler()
 
     if len(sys.argv) < 2:
         tutil.exit_with_error("usage: imageshepherd.py config")
+
+    global global_config
+    global_config = tutil.parse_config(sys.argv[1])
 
     procs = []
     for source in global_config['sources']:
