@@ -35,13 +35,34 @@ def get_new_images(config):
     rsync = ['rsync']
     rsync.append("--prune-empty-dirs --compress --archive")
     rsync.append('-rsh "ssh -i {}"'.format(config['ssh_key']))
-    rsync.append("{}@{}:".format(config['user'], config['host']))
+    rsync.append("{}@{}:".format(config['user'], config['address']))
     rsync.append(os.path.join(tutil.get_env_var('SCRATCH_DIR'),
                               config['name']))
 
     output = os.popen(" ".join(rsync), 'r')
-
+    logger.debug(output.read())
     return False
+
+
+def deliver_images(config):
+    pass
+
+
+def check_source(config):
+    scratch_dir = os.path.join(tutil.get_env_var('SCRATCH_DIR'),
+                               config['name'])
+    config['scratch_dir'] = scratch_dir
+    got_new_images = get_new_images(config)
+    if got_new_images:
+        procs = []
+        for destination in config['destinations']:
+            destination['scratch_dir'] = config['scratch_dir']
+            p = Process(target=deliver_images, args=(destination,))
+            procs.append(p)
+            p.start()
+
+        for proc in procs:
+            proc.join()
 
 
 def main():
@@ -53,12 +74,16 @@ def main():
     multiprocessing_logging.install_mp_handler()
 
     if len(sys.argv) < 2:
-        tutil.exit_with_error("usage: camrouter.py config")
+        tutil.exit_with_error("usage: imageshepherd.py config")
 
-    global global_config
-    global_config = tutil.parse_config(sys.argv[1])
+    procs = []
     for source in global_config['sources']:
-        got_new_images = get_new_images(source)
+        p = Process(target=check_source, args=(source,))
+        procs.append(p)
+        p.start()
+
+    for proc in procs:
+        proc.join()
 
     logger.debug("That's all for now, bye.")
     logging.shutdown()
