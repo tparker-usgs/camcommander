@@ -31,6 +31,7 @@ WORKDIR /app/camcommander
 ADD requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+ADD rc.local /etc
 ADD VERSION .
 ADD cron-camcommander .
 ADD webrelaypoker.py .
