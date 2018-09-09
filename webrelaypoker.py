@@ -11,14 +11,11 @@
 from string import Template
 import signal
 import logging
-import errno
 from multiprocessing import Process
 import time
 import math
-import pathlib
 import sys
 
-import ruamel.yaml
 import tomputils.util as tutil
 import multiprocessing_logging
 import requests
