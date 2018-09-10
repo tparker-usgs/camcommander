@@ -100,7 +100,6 @@ def main():
         msg = "Config doesn't exist, will try again next time. ({})"
         tutil.exit_with_error(msg.format(config_path))
 
-
     config = tutil.parse_config(config_path)
     procs = poke_relays(config['relays'])
     for proc in procs:
