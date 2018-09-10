@@ -27,7 +27,7 @@ global_config = None
 def get_new_images(config):
     rsync = ['rsync']
     rsync.append("--prune-empty-dirs --compress --archive --rsh ssh")
-    rsync.append("{}:".format(config['address']))
+    rsync.append("{}:".format(config['name']))
     rsync.append(os.path.join(tutil.get_env_var('SCRATCH_DIR'),
                               config['name']))
     rsync_cmd = " ".join(rsync)
