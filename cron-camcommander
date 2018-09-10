@@ -1,2 +1,6 @@
+# Gather and maintain my configs
 */5 * * * * /usr/local/bin/configupdater --url=$CONFIGUPDATER_URL --user=$USER --passwd=$PASSWD $CONFIGUPDATER_CONFIG
+* * * * * chmod -R 600 ~/.ssh
+
+# pulse the web relays
 * * * * * /app/camcommander/webrelaypoker.py $WRP_CONFIG_PATH
