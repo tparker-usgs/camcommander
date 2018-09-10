@@ -15,6 +15,7 @@ from multiprocessing import Process
 import time
 import math
 import sys
+import os
 
 import tomputils.util as tutil
 import multiprocessing_logging
@@ -94,7 +95,13 @@ def main():
     if len(sys.argv) < 2:
         tutil.exit_with_error("usage: webrelaypoker.py config")
 
-    config = tutil.parse_config(sys.argv[1])
+    config_path = sys.argv[1]
+    if not os.path.isfile(config_path):
+        msg = "Config doesn't exist, will try again next time. ({})"
+        tutil.exit_with_error(msg.format(config_path))
+
+
+    config = tutil.parse_config(config_path)
     procs = poke_relays(config['relays'])
     for proc in procs:
         proc.join()
