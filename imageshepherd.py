@@ -36,6 +36,7 @@ def get_new_images(config):
     logger.debug("rsync: %s", rsync_cmd)
     output = os.popen(rsync_cmd, 'r')
     for line in output:
+        line = line.strip()
         if line.endswith(".jpg"):
             logger.info("New image %s", line)
             new_image_count += 1
