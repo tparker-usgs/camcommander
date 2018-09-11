@@ -3,3 +3,6 @@
 
 # pulse the web relays
 * * * * * /app/camcommander/webrelaypoker.py $WRP_CONFIG_PATH
+
+# move images arround
+* * * * * /app/camcommander/imageshepherd.py $IS_CONFIG_PATH
