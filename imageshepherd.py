@@ -25,16 +25,25 @@ global_config = None
 
 
 def get_new_images(config):
+    new_image_count = 0
+
     rsync = ['rsync']
-    rsync.append("--prune-empty-dirs --compress --archive --rsh ssh")
+    rsync.append("--verbose --prune-empty-dirs --compress --archive --rsh ssh")
     rsync.append("{}:{}".format(config['name'], config['path']))
     rsync.append(os.path.join(tutil.get_env_var('SCRATCH_DIR'),
                               config['name']))
     rsync_cmd = " ".join(rsync)
     logger.debug("rsync: %s", rsync_cmd)
-    # output = os.popen(rsync_cmd, 'r')
-    # logger.debug(output.read())
-    return False
+    output = os.popen(rsync_cmd, 'r')
+    for line in output:
+        if line.endswith(".jpg"):
+            logger.info("New image %s", line)
+            new_image_count += 1
+        else:
+            logger.debug("yada yada yada %s", line)
+    logger.debug("All done with %s, new images: %d", config['name'], new_image_count)
+
+    return new_image_count
 
 
 def deliver_images(config):
@@ -45,8 +54,8 @@ def check_source(config):
     scratch_dir = os.path.join(tutil.get_env_var('SCRATCH_DIR'),
                                config['name'])
     config['scratch_dir'] = scratch_dir
-    got_new_images = get_new_images(config)
-    if got_new_images:
+    new_image_count = get_new_images(config)
+    if new_image_count > 0:
         procs = []
         for destination in config['destinations']:
             destination['scratch_dir'] = config['scratch_dir']
