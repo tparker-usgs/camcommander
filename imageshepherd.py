@@ -42,7 +42,8 @@ def get_new_images(config):
             new_image_count += 1
         else:
             logger.debug("yada yada yada %s", line)
-    logger.debug("All done with %s, new images: %d", config['name'], new_image_count)
+    logger.debug("All done with %s, new images: %d", config['name'],
+                 new_image_count)
 
     return new_image_count
 
