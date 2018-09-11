@@ -79,8 +79,13 @@ def main():
     if len(sys.argv) < 2:
         tutil.exit_with_error("usage: imageshepherd.py config")
 
+    config_path = sys.argv[1]
+    if not os.path.isfile(config_path):
+        msg = "Config doesn't exist, will try again next time. ({})"
+        tutil.exit_with_error(msg.format(config_path))
+
     global global_config
-    global_config = tutil.parse_config(sys.argv[1])
+    global_config = tutil.parse_config(config_path)
 
     procs = []
     for source in global_config['sources']:
