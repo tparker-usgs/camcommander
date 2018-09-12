@@ -56,6 +56,7 @@ def flush_old_images(config):
 
 
 def deliver_images(config):
+    logger.debug("Shipping images to {}", config['name'])
     rsync = ['rsync']
     rsync.append("-n --verbose --prune-empty-dirs --compress --archive --rsh ssh")
     rsync.append(os.path.join(config['scratch_dir']))
