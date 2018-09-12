@@ -52,7 +52,9 @@ def flush_old_images(config):
     ssh_cmd = ssh_cmd.format(config['name'], config['path'],
                              config['retention'])
     logger.info("Flushing old images with: %s", ssh_cmd)
-    os.system(ssh_cmd)
+    output = os.popen(ssh_cmd, 'r')
+    for line in output:
+        logger.info(line.strip())
 
 
 def deliver_images(config):
@@ -80,7 +82,7 @@ def check_source(config):
     new_image_count = get_new_images(config)
     if 'retention' in config and new_image_count > -1:
         flush_old_images(config)
-    if new_image_count > 0:
+    if new_image_count > -1:
         procs = []
         for destination in config['destinations']:
             destination['scratch_dir'] = config['scratch_dir']
