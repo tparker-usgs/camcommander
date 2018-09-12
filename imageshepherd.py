@@ -52,8 +52,7 @@ def flush_old_images(config):
     ssh_cmd = 'ssh {} "find {} -name *.jpg -ctime +{} -exec echo {{}} \;"'
     ssh_cmd = ssh_cmd.format(config['name'], config['path'],
                              config['retention'])
-    logger.debug("ssh: %s", ssh_cmd)
-    #os.system(ssh_cmd)
+    os.system(ssh_cmd)
 
 
 def deliver_images(config):
