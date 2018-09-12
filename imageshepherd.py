@@ -30,8 +30,7 @@ def get_new_images(config):
     rsync = ['rsync']
     rsync.append("--verbose --prune-empty-dirs --compress --archive --rsh ssh")
     rsync.append("{}:{}".format(config['name'], config['path']))
-    rsync.append(os.path.join(tutil.get_env_var('SCRATCH_DIR'),
-                              config['name']))
+    rsync.append(config['scratch_dir'])
     rsync_cmd = " ".join(rsync)
     logger.debug("rsync: %s", rsync_cmd)
     output = os.popen(rsync_cmd, 'r')
@@ -57,7 +56,20 @@ def flush_old_images(config):
 
 
 def deliver_images(config):
-    pass
+    rsync = ['rsync']
+    rsync.append("-n --verbose --prune-empty-dirs --compress --archive --rsh ssh")
+    rsync.append(os.path.join(config['scratch_dir']))
+    rsync.append("{}:{}".format(config['name'], config['path']))
+    rsync_cmd = " ".join(rsync)
+    logger.debug("rsync: %s", rsync_cmd)
+    # output = os.popen(rsync_cmd, 'r')
+    # for line in output:
+    #     line = line.strip()
+    #     if line.endswith(".jpg"):
+    #         logger.info("Sent image %s", line)
+    #     else:
+    #         logger.debug("yada yada yada %s", line)
+    logger.debug("Images delivered to %s", config['name'])
 
 
 def check_source(config):
