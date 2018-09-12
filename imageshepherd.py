@@ -61,7 +61,7 @@ def deliver_images(config):
     logger.debug("Shipping images to %s", config['name'])
     rsync = ['rsync']
     rsync.append("-n --verbose --prune-empty-dirs --compress --archive --rsh ssh")
-    rsync.append(os.path.join(config['scratch_dir']))
+    rsync.append(config['scratch_dir'])
     rsync.append("{}:{}".format(config['name'], config['path']))
     rsync_cmd = " ".join(rsync)
     logger.debug("rsync: %s", rsync_cmd)
@@ -78,7 +78,7 @@ def deliver_images(config):
 def check_source(config):
     scratch_dir = os.path.join(tutil.get_env_var('SCRATCH_DIR'),
                                config['name'])
-    config['scratch_dir'] = scratch_dir
+    config['scratch_dir'] = scratch_dir + os.sep
     new_image_count = get_new_images(config)
     if 'retention' in config and new_image_count > -1:
         flush_old_images(config)
