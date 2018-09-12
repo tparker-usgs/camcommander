@@ -49,12 +49,10 @@ def get_new_images(config):
 
 
 def flush_old_images(config):
-    # ssh_cmd = "ssh {} find {} -ctime +{} -exec rm \{\} \\;"
-    # ssh_cmd = ssh_cmd.format(config['name'], config['path'],
-    #                          config['retention'])
-    # logger.debug("ssh: %s", ssh_cmd)
-    # output = os.popen(ssh_cmd, 'r')
-    pass
+    ssh_cmd = "ssh {} find {} -ctime +{} -exec rm \{\} \\;"
+    logger.debug("ssh: %s", ssh_cmd.format(config['name'], config['path'],
+                             config['retention']))
+    #os.system(ssh_cmd)
 
 
 def deliver_images(config):
@@ -66,7 +64,7 @@ def check_source(config):
                                config['name'])
     config['scratch_dir'] = scratch_dir
     new_image_count = get_new_images(config)
-    if 'retention' in config and new_image_count > 0:
+    if 'retention' in config and new_image_count > -1:
         flush_old_images(config)
     if new_image_count > 0:
         procs = []
