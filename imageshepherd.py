@@ -49,9 +49,10 @@ def get_new_images(config):
 
 
 def flush_old_images(config):
-    ssh_cmd = "ssh {} find {} -ctime +{} -exec rm \{\} \\;"
-    logger.debug("ssh: %s", ssh_cmd.format(config['name'], config['path'],
-                             config['retention']))
+    ssh_cmd = "ssh {} find {} -ctime +{} -exec rm {{}} \;"
+    ssh_cmd = ssh_cmd.format(config['name'], config['path'],
+                             config['retention'])
+    logger.debug("ssh: %s", ssh_cmd)
     #os.system(ssh_cmd)
 
 
