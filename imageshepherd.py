@@ -25,8 +25,6 @@ global_config = None
 
 
 def get_new_images(config):
-    new_image_count = 0
-
     rsync = ['rsync']
     rsync.append("--verbose --prune-empty-dirs --compress --archive --rsh ssh")
     rsync.append("{}:{}".format(config['name'], config['path']))
@@ -34,20 +32,24 @@ def get_new_images(config):
     rsync_cmd = " ".join(rsync)
     logger.debug("rsync: %s", rsync_cmd)
     output = os.popen(rsync_cmd, 'r')
+    new_images = []
     for line in output:
         line = line.strip()
         if line.endswith(".jpg"):
             logger.info("New image %s", line)
-            new_image_count += 1
+            new_images.append(line)
         else:
             logger.debug("yada yada yada %s", line)
+    logger.debug("All done with %s, new images: %d", config['name'],
+                 len(new_images))
 
-    logger.debug("Retrieved %d new images from %s", new_image_count,
-                 config['name'])
-    return new_image_count
+    return new_images
 
 
 def flush_old_images(config):
+    if 'retention' not in config:
+        return
+
     ssh_cmd = 'ssh {} "find {} -name *.jpg -ctime +{} -print -exec rm {{}} \;"'
     ssh_cmd = ssh_cmd.format(config['name'], config['path'],
                              config['retention'])
@@ -78,11 +80,10 @@ def deliver_images(config):
 def check_source(config):
     scratch_dir = os.path.join(tutil.get_env_var('SCRATCH_DIR'),
                                config['name'])
-    config['scratch_dir'] = scratch_dir + os.sep
-    new_image_count = get_new_images(config)
-    if 'retention' in config and new_image_count > -1:
+    config['scratch_dir'] = scratch_dir
+    new_images = get_new_images(config)
+    if len(new_images) > 0:
         flush_old_images(config)
-    if new_image_count > -1:
         procs = []
         for destination in config['destinations']:
             destination['scratch_dir'] = config['scratch_dir']
