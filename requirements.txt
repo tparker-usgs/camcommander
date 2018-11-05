@@ -1,4 +1,5 @@
 request
+inotify
 tomputils>=1.10.0
 single
 multiprocessing-logging
