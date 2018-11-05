@@ -41,9 +41,9 @@ def poke_relay(relay):
               + "doesn't provide a valid HTTP response to state.xml " \
               + " requests, but it may also obscure other problems."
         logging.info(msg)
-    except requests.exceptions.ReadTimeout as e:
+    except requests.exceptions.ReadTimeout:
         logging.info("Time-out poking %s", relay['name'])
-    except requests.exceptions.RequestException as e:
+    except requests.exceptions.RequestException:
         logging.exception("%s resisted.", relay['name'])
     finally:
         for handler in logger.handlers:
