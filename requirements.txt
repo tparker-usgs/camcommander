@@ -1,5 +1,6 @@
 request
-inotify
+msgpack
+zeromq
 tomputils>=1.10.0
 single
 multiprocessing-logging
