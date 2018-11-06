@@ -1,6 +1,6 @@
 request
 msgpack
-zeromq
+pyzmq
 tomputils>=1.10.0
 single
 multiprocessing-logging
