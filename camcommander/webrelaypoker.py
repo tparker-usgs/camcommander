@@ -14,8 +14,6 @@ import logging
 from multiprocessing import Process
 import time
 import math
-import sys
-import os
 
 import tomputils.util as tutil
 import multiprocessing_logging
