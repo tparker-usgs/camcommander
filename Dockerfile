@@ -31,6 +31,8 @@ ADD support/launch.sh .
 ADD support/cron-camcommander .
 RUN chmod 755 *.sh
 
+WORKDIR /app/build
+ADD . .
 RUN python setyp.py install
 
 CMD ["launch.sh"]
