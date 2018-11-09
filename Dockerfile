@@ -6,12 +6,6 @@ FROM python:3.7
 
 RUN apt-get update && apt-get install -y rsync
 
-#WORKDIR /root/.pip
-#ADD support/pip.conf .
-
-WORKDIR /root/certs
-add support/DOIRootCA2.cer .
-
 WORKDIR /usr/share/ca-certificates/extra
 ADD support/DOIRootCA2.cer DOIRootCA2.crt
 RUN echo "extra/DOIRootCA2.crt" >> /etc/ca-certificates.conf && update-ca-certificates
@@ -27,15 +21,16 @@ RUN curl -fsSLO "$SUPERCRONIC_URL" \
  && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
 
 ENV CONFIGUPDATER_CONFIG=/tmp/configupdater.yaml
+
 WORKDIR /app/camcommander
 ADD requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 ADD VERSION .
-ADD launch.sh .
-ADD cron-camcommander .
-ADD webrelaypoker.py .
-ADD imageshepherd.py .
-RUN chmod 755 *.py *.sh
+ADD support/launch.sh .
+ADD support/cron-camcommander .
+RUN chmod 755 *.sh
+
+RUN python setyp.py install
 
 CMD ["launch.sh"]

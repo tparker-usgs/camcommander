@@ -37,6 +37,7 @@ setup(
     entry_points={
         'console_scripts': [
             'webrelaypoker = camcommander.webrelaypoker:main',
+            'imageshepherd = camcommander.imageshepherd:main',
         ]
     }
 )
