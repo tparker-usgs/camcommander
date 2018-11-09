@@ -2,7 +2,7 @@
 */5 * * * * /usr/local/bin/configupdater --url=$CONFIGUPDATER_URL --user=$USER --passwd=$PASSWD $CONFIGUPDATER_CONFIG; chmod -R 500 /tmp/camcommander/svn/.ssh
 
 # pulse the web relays
-* * * * * /app/camcommander/webrelaypoker.py $WRP_CONFIG_PATH
+* * * * * /app/camcommander/webrelaypoker.py
 
-# move images arround
-* * * * * /app/camcommander/imageshepherd.py $IS_CONFIG_PATH
+# retrieve images
+* * * * * /app/camcommander/rsyncfetcher.py

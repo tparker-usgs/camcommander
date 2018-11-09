@@ -22,6 +22,7 @@ import multiprocessing_logging
 import requests
 
 
+CONFIG_FILE_ENV = 'WRP_CONFIG_PATH'
 URL_TMPL = Template("http://${address}:${port}/state.xml"
                     "?relay${relayidx}State=2"
                     "&pulseTime${relayidx}=${pulse_duration}")
@@ -92,15 +93,7 @@ def main():
     logger = tutil.setup_logging("webrelaypoker errors")
     multiprocessing_logging.install_mp_handler()
 
-    if len(sys.argv) < 2:
-        tutil.exit_with_error("usage: webrelaypoker.py config")
-
-    config_path = sys.argv[1]
-    if not os.path.isfile(config_path):
-        msg = "Config doesn't exist, will try again next time. ({})"
-        tutil.exit_with_error(msg.format(config_path))
-
-    config = tutil.parse_config(config_path)
+    config = tutil.parse_config(tutil.get_env_var(CONFIG_FILE_ENV))
     procs = poke_relays(config['relays'])
     for proc in procs:
         proc.join()
