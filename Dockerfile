@@ -33,6 +33,7 @@ RUN chmod 755 *.sh
 
 WORKDIR /app/build
 ADD . .
+RUN ls
 RUN python setyp.py install
 
 CMD ["launch.sh"]
