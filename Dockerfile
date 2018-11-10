@@ -36,5 +36,4 @@ ADD . .
 RUN ls
 RUN python setup.py install
 
-#CMD ["supervisord /app/camcommander/supervisord.conf"]
-CMD ["ping -i 1 localhost"]
+CMD ["supervisord","/app/camcommander/supervisord.conf"]
