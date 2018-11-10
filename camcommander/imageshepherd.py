@@ -108,6 +108,7 @@ def start_proxy():
 
     return device
 
+
 def start_fetchers():
     pass
 
@@ -133,6 +134,7 @@ def main():
 
     logger.info("Waiting for proxy to die")
     device.join()
+
 
 if __name__ == '__main__':
     main()
