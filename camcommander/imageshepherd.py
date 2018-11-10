@@ -124,6 +124,7 @@ def main():
     global logger
     logger = tutil.setup_logging("imageshepherd errors")
     multiprocessing_logging.install_mp_handler()
+    logger.info("Launching imageshepherd. Lets go!")
 
     global global_config
     global_config = tutil.parse_config(tutil.get_env_var(CONFIG_FILE_ENV))
