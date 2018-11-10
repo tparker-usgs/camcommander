@@ -17,10 +17,13 @@ import os
 import tomputils.util as tutil
 import multiprocessing_logging
 import zmq
-from zmq.devices import ProcessDevice
+from zmq.devices import ThreadDevice
+
 
 CONFIG_FILE_ENV = 'IS_CONFIG_FILE'
 REMOTE_PATTERN = '/*/%Y/%m/%d/*.jpg'
+PROXY_FRONTEND = "tcp://*:5560"
+PROXY_BACKEND = "tcp://*:5559"
 
 global_config = None
 
@@ -99,9 +102,9 @@ def check_source(config):
 
 
 def start_proxy():
-    device = ProcessDevice(zmq.FORWARDER, zmq.SUB, zmq.PUB)
-    device.bind_in("tcp://*:5559")
-    device.bind_out("tcp://*:5560")
+    device = ThreadDevice(zmq.FORWARDER, zmq.XSUB, zmq.XPUB)
+    device.bind_in(PROXY_BACKEND)
+    device.bind_out(PROXY_FRONTEND)
     device.start()
 
 
@@ -125,8 +128,8 @@ def main():
     global_config = tutil.parse_config(tutil.get_env_var(CONFIG_FILE_ENV))
 
     start_proxy()
-    start_fetchers()
     start_shippers()
+    start_fetchers()
 
 
 if __name__ == '__main__':

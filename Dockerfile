@@ -36,4 +36,4 @@ ADD . .
 RUN ls
 RUN python setup.py install
 
-CMD ["launch.sh"]
+CMD ["supervisord /app/camcommander/supervisord.conf"]
