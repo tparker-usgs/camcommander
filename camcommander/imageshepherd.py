@@ -105,6 +105,7 @@ def start_proxy():
     device.bind_out(PROXY_FRONTEND)
     device.start()
 
+    return device
 
 def start_fetchers():
     pass
@@ -125,10 +126,11 @@ def main():
     global global_config
     global_config = tutil.parse_config(tutil.get_env_var(CONFIG_FILE_ENV))
 
-    start_proxy()
+    device = start_proxy()
     start_shippers()
     start_fetchers()
 
+    device.join()
 
 if __name__ == '__main__':
     main()
