@@ -16,9 +16,10 @@ import os
 
 import tomputils.util as tutil
 import multiprocessing_logging
+import zmq
+from zmq.devices import ProcessDevice
 
-
-CONFIG_FILE_ENV = 'CP_CONFIG_FILE'
+CONFIG_FILE_ENV = 'IS_CONFIG_FILE'
 REMOTE_PATTERN = '/*/%Y/%m/%d/*.jpg'
 
 global_config = None
@@ -97,6 +98,21 @@ def check_source(config):
             proc.join()
 
 
+def start_proxy():
+    device = ProcessDevice(zmq.FORWARDER, zmq.SUB, zmq.PUB)
+    device.bind_in("tcp://*:5559")
+    device.bind_out("tcp://*:5560")
+    device.start()
+
+
+def start_fetchers():
+    pass
+
+
+def start_shippers():
+    pass
+
+
 def main():
     # let ctrl-c work as it should.
     signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -105,28 +121,12 @@ def main():
     logger = tutil.setup_logging("imageshepherd errors")
     multiprocessing_logging.install_mp_handler()
 
-    if len(sys.argv) < 2:
-        tutil.exit_with_error("usage: imageshepherd.py config")
-
-    config_path = sys.argv[1]
-    if not os.path.isfile(config_path):
-        msg = "Config doesn't exist, will try again next time. ({})"
-        tutil.exit_with_error(msg.format(config_path))
-
     global global_config
-    global_config = tutil.parse_config(config_path)
+    global_config = tutil.parse_config(tutil.get_env_var(CONFIG_FILE_ENV))
 
-    procs = []
-    for source in global_config['sources']:
-        p = Process(target=check_source, args=(source,))
-        procs.append(p)
-        p.start()
-
-    for proc in procs:
-        proc.join()
-
-    logger.debug("That's all for now, bye.")
-    logging.shutdown()
+    start_proxy()
+    start_fetchers()
+    start_shippers()
 
 
 if __name__ == '__main__':
