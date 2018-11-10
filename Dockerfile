@@ -7,7 +7,7 @@ FROM python:3.7
 RUN apt-get update && apt-get install -y rsync
 
 WORKDIR /usr/share/ca-certificates/extra
-ADD support/DOIRootCA2.cer DOIRootCA2.crt
+COPY support/DOIRootCA2.cer DOIRootCA2.crt
 RUN echo "extra/DOIRootCA2.crt" >> /etc/ca-certificates.conf && update-ca-certificates
 
 ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.1.6/supercronic-linux-amd64 \
@@ -23,12 +23,11 @@ RUN curl -fsSLO "$SUPERCRONIC_URL" \
 ENV CONFIGUPDATER_CONFIG=/tmp/configupdater.yaml
 
 WORKDIR /app/camcommander
-ADD requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-ADD VERSION .
-ADD support/launch.sh .
-ADD support/cron-camcommander .
+COPY support/launch.sh .
+COPY support/cron-camcommander .
 RUN chmod 755 *.sh
 
 WORKDIR /app/build
@@ -36,4 +35,5 @@ ADD . .
 RUN ls
 RUN python setup.py install
 
-CMD ["supervisord","/app/camcommander/supervisord.conf"]
+COPY supervisord.conf /usr/local/etc/supervisord.conf
+CMD ["supervisord"]
