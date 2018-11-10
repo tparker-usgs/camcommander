@@ -1,1 +1,1 @@
-circus
+git+https://github.com/Supervisor/supervisor#egg=supervisor
