@@ -9,9 +9,7 @@
 
 """ fetch and ship webcam images."""
 import signal
-import logging
 from multiprocessing import Process
-import sys
 import os
 
 import tomputils.util as tutil
