@@ -100,6 +100,7 @@ def check_source(config):
 
 
 def start_proxy():
+    logger.info("Starting proxy")
     device = ThreadDevice(zmq.FORWARDER, zmq.XSUB, zmq.XPUB)
     device.bind_in(PROXY_BACKEND)
     device.bind_out(PROXY_FRONTEND)
@@ -130,6 +131,7 @@ def main():
     start_shippers()
     start_fetchers()
 
+    logger.info("Waiting for proxy to die")
     device.join()
 
 if __name__ == '__main__':
