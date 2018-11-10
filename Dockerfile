@@ -36,4 +36,5 @@ ADD . .
 RUN ls
 RUN python setup.py install
 
-CMD ["supervisord /app/camcommander/supervisord.conf"]
+#CMD ["supervisord /app/camcommander/supervisord.conf"]
+CMD ["sleep 10000"]
