@@ -18,7 +18,7 @@ import zmq
 from zmq.devices import ThreadDevice
 
 
-CONFIG_FILE_ENV = 'IS_CONFIG_FILE'
+CONFIG_FILE_ENV = 'IS_CONFIG_PATH'
 REMOTE_PATTERN = '/*/%Y/%m/%d/*.jpg'
 PROXY_FRONTEND = "tcp://*:5560"
 PROXY_BACKEND = "tcp://*:5559"
