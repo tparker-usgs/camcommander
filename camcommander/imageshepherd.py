@@ -11,6 +11,7 @@
 import signal
 from multiprocessing import Process
 import os
+import time
 
 import tomputils.util as tutil
 import multiprocessing_logging
@@ -127,7 +128,16 @@ def main():
     logger.info("Launching imageshepherd. Lets go!")
 
     global global_config
-    global_config = tutil.parse_config(tutil.get_env_var(CONFIG_FILE_ENV))
+    global_config = None
+    while global_config is None:
+        try:
+            global_config = tutil.parse_config(tutil.get_env_var(CONFIG_FILE_ENV))
+        except FileNotFoundError:
+            error = "Config file %s not found. ".format(CONFIG_FILE_ENV)
+            error += "Lets wait a minute and look again."
+            logger.info(error)
+            time.sleep(60)
+        time.sleep(1)
 
     device = start_proxy()
     start_shippers()
