@@ -35,5 +35,4 @@ ADD . .
 RUN ls
 RUN python setup.py install
 
-COPY supervisord.conf /usr/local/etc/supervisord.conf
-CMD ["supervisord"]
+CMD ["launch.sh"]
