@@ -131,7 +131,8 @@ def main():
     global_config = None
     while global_config is None:
         try:
-            global_config = tutil.parse_config(tutil.get_env_var(CONFIG_FILE_ENV))
+            config_file = tutil.get_env_var(CONFIG_FILE_ENV)
+            global_config = tutil.parse_config(config_file)
         except FileNotFoundError:
             error = "Config file %s not found. ".format(CONFIG_FILE_ENV)
             error += "Lets wait a minute and look again."
