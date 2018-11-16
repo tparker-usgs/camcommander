@@ -10,13 +10,17 @@
 """ fetch webcam images."""
 
 
-import time
+import os
 
 import zmq
+import tomputils.util as tutil
 
 
 class Fetcher:
     def __init__(self, config, proxy_backend, context=None):
+        global logger
+        logger = tutil.setup_logging("fetcher errors")
+
         self.config = config
         self.context = context or zmq.Context().instance()
         self.socket = context.socket(zmq.PUB)
@@ -38,8 +42,8 @@ class RsyncFetcher(Fetcher):
         rsync.append("--archive")
         rsync.append("--delete")
         rsync.append("--rsh ssh")
-        rsync.append("{}:{}".format(config['name'], config['path']))
-        rsync.append(config['scratch_dir'])
+        rsync.append("{}:{}".format(self.config['name'], self.config['path']))
+        rsync.append(self.config['scratch_dir'])
         rsync_cmd = " ".join(rsync)
         logger.debug("rsync: %s", rsync_cmd)
         output = os.popen(rsync_cmd, 'r')
@@ -53,5 +57,5 @@ class RsyncFetcher(Fetcher):
                 new_images.append(line)
             else:
                 logger.debug("yada yada yada %s", line)
-        logger.debug("All done with %s, new images: %d", config['name'],
+        logger.debug("All done with %s, new images: %d", self.config['name'],
                      len(new_images))

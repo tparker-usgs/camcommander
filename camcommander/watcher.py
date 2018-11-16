@@ -10,13 +10,16 @@
 """ fetch webcam images."""
 
 
-import time
-
 import zmq
+
+import tomputils.util as tutil
 
 
 class Watcher:
     def __init__(self, config, proxy_frontend, context=None):
+        global logger
+        logger = tutil.setup_logging("watcher errors")
+
         self.config = config
         self.context = context or zmq.Context().instance()
         self.socket = context.socket(zmq.SUB)

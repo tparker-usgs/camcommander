@@ -9,11 +9,11 @@
 
 """ fetch and ship webcam images."""
 import signal
-from multiprocessing import Process
-import os
 import time
 import _thread
 
+from fetcher import RsyncFetcher
+from watcher import ConsoleWatcher
 import tomputils.util as tutil
 import multiprocessing_logging
 import zmq
