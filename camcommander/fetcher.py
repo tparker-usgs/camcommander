@@ -23,9 +23,35 @@ class Fetcher:
         self.socket.bind(proxy_backend)
 
     def start(self):
-        while(True):
-            self.fetch()
-            time.sleep(self.config['interval'])
+        self.fetch()
 
     def fetch(self):
         pass
+
+
+class RsyncFetcher(Fetcher):
+    def fetch(self):
+        rsync = ['rsync']
+        rsync.append("--verbose")
+        rsync.append("--prune-empty-dirs")
+        rsync.append("--compress")
+        rsync.append("--archive")
+        rsync.append("--delete")
+        rsync.append("--rsh ssh")
+        rsync.append("{}:{}".format(config['name'], config['path']))
+        rsync.append(config['scratch_dir'])
+        rsync_cmd = " ".join(rsync)
+        logger.debug("rsync: %s", rsync_cmd)
+        output = os.popen(rsync_cmd, 'r')
+        new_images = []
+        for line in output:
+            line = line.strip()
+            if line.endswith(".jpg"):
+                logger.info("New image %s", line)
+                self.send(line)
+
+                new_images.append(line)
+            else:
+                logger.debug("yada yada yada %s", line)
+        logger.debug("All done with %s, new images: %d", config['name'],
+                     len(new_images))
