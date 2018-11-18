@@ -61,7 +61,7 @@ def start_proxy():
 def start_fetchers(sources):
     for source in sources:
         fetcher = fetcher_factory(source, PROXY_BACKEND)
-        _thread.start_new_thread(fetcher.start)
+        _thread.start_new_thread(fetcher.start, ())
         logger.debug("Launched fetcher %s".format(source['name']))
 
 
@@ -72,7 +72,7 @@ def start_shippers():
 def start_watchers(watchers):
     for watcher in watchers:
         watcher = watcher_factory(global_config, PROXY_FRONTEND)
-    _thread.start_new_thread(watcher.start)
+    _thread.start_new_thread(watcher.start, ())
     logger.debug("Launched watcher %s".format(watcher['name']))
 
 
