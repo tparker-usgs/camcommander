@@ -99,7 +99,8 @@ def main():
         time.sleep(1)
 
     device = start_proxy()
-    start_watchers()
+    if 'watchers' in global_config:
+        start_watchers(global_config['watchers'])
     start_shippers()
     start_fetchers(global_config['sources'])
 
