@@ -22,7 +22,7 @@ class Watcher:
 
         self.config = config
         self.context = context or zmq.Context().instance()
-        self.socket = context.socket(zmq.SUB)
+        self.socket = self.context.socket(zmq.SUB)
         self.socket.connect(proxy_frontend)
 
     def start(self):
