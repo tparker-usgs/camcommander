@@ -22,14 +22,14 @@ RUN curl -fsSLO "$SUPERCRONIC_URL" \
 
 ENV CONFIGUPDATER_CONFIG=/tmp/configupdater.yaml
 
-WORKDIR /app/camcommander
-COPY support/launch.sh .
-COPY support/cron-camcommander .
-RUN chmod 755 *.sh
-
 WORKDIR /app/build
 ADD . .
 RUN ls
 RUN python setup.py install
+
+WORKDIR /app/camcommander
+COPY support/launch.sh .
+COPY support/cron-camcommander .
+RUN chmod 755 *.sh
 
 CMD ["launch.sh"]
