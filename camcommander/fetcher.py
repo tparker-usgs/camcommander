@@ -34,7 +34,7 @@ class Fetcher:
 
 
 def fetcher_factory(config, proxy_backend):
-    if config['type'] is 'rsync':
+    if config['type'] == 'rsync':
         return RsyncFetcher(config, proxy_backend)
     else:
         error_msg = "Unkown fetcher type {} for source {}"

@@ -33,7 +33,7 @@ class Watcher:
 
 
 def watcher_factory(config, proxy_frontend):
-    if config['name'] is 'console':
+    if config['name'] == 'console':
         msg = "Creating %s watcher %s."
         logger.debug(msg.format(config['name'], config['type']))
         return ConsoleWatcher(config, proxy_frontend)
