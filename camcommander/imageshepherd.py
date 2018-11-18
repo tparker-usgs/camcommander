@@ -23,8 +23,8 @@ from zmq.devices import ThreadDevice
 
 CONFIG_FILE_ENV = 'IS_CONFIG_PATH'
 REMOTE_PATTERN = '/*/%Y/%m/%d/*.jpg'
-PROXY_FRONTEND = "tcp://*:5560"
-PROXY_BACKEND = "tcp://*:5559"
+PROXY_FRONTEND = "tcp://127.0.0.1:5560"
+PROXY_BACKEND = "tcp://127.0.0.1:5559"
 
 global_config = None
 
