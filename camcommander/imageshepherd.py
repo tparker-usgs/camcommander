@@ -12,8 +12,8 @@ import signal
 import time
 import _thread
 
-from fetcher import RsyncFetcher
-from watcher import ConsoleWatcher
+from .fetcher import Fetcher
+from .watcher import ConsoleWatcher
 import tomputils.util as tutil
 import multiprocessing_logging
 import zmq
@@ -57,9 +57,10 @@ def start_proxy():
     return device
 
 
-def start_fetchers():
-    fetcher = RsyncFetcher(global_config, PROXY_BACKEND)
-    _thread.start_new_thread(fetcher.start)
+def start_fetchers(sources):
+    for source in sources:
+        fetcher = Fetc11her(source, PROXY_BACKEND)
+        _thread.start_new_thread(fetcher.start)
 
 
 def start_shippers():
@@ -96,7 +97,7 @@ def main():
     device = start_proxy()
     start_watchers()
     start_shippers()
-    start_fetchers()
+    start_fetchers(global_config['sources'])
 
     logger.info("Waiting for proxy to die")
     device.join()
