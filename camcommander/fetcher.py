@@ -24,7 +24,7 @@ class Fetcher:
         self.config = config
         self.context = context or zmq.Context().instance()
         self.socket = self.context.socket(zmq.PUB)
-        self.socket.bind(proxy_backend)
+        self.socket.connect(proxy_backend)
 
     def start(self):
         self.fetch()
