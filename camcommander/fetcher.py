@@ -37,7 +37,7 @@ def fetcher_factory(config, proxy_backend):
     if config['type'] is 'rsync':
         return RsyncFetcher(config, proxy_backend)
     else:
-        error_msg = "Unkown fetcher type %s for source %s"
+        error_msg = "Unkown fetcher type {} for source {}"
         tutil.exit_with_error(error_msg.format(config['type'], config['name']))
 
 
