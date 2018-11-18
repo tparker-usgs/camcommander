@@ -32,7 +32,7 @@ class Watcher:
         pass
 
 
-class ConsoleWater(Watcher):
+class ConsoleWatcher(Watcher):
     def watch(self):
         run = True
         while run:

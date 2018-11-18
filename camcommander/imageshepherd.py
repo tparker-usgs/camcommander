@@ -12,7 +12,7 @@ import signal
 import time
 import _thread
 
-from .fetcher import Fetcher
+from .fetcher import fetcher_factory
 from .watcher import ConsoleWatcher
 import tomputils.util as tutil
 import multiprocessing_logging
@@ -59,8 +59,9 @@ def start_proxy():
 
 def start_fetchers(sources):
     for source in sources:
-        fetcher = Fetc11her(source, PROXY_BACKEND)
+        fetcher = fetcher_factory(source, PROXY_BACKEND)
         _thread.start_new_thread(fetcher.start)
+        logger.debug("Launched fetcher %s".format(source['name']))
 
 
 def start_shippers():
