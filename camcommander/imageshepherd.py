@@ -13,7 +13,8 @@ import time
 import _thread
 
 from .fetcher import fetcher_factory
-from .watcher import ConsoleWatcher
+from .watcher import watcher_factory
+
 import tomputils.util as tutil
 import multiprocessing_logging
 import zmq
@@ -68,9 +69,11 @@ def start_shippers():
     pass
 
 
-def start_watchers():
-    watcher = ConsoleWatcher(global_config, PROXY_FRONTEND)
+def start_watchers(watchers):
+    for watcher in watchers:
+        watcher = watcher_factory(global_config, PROXY_FRONTEND)
     _thread.start_new_thread(watcher.start)
+    logger.debug("Launched watcher %s".format(watcher['name']))
 
 
 def main():
