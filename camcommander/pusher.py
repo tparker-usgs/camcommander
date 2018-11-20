@@ -7,7 +7,7 @@
 # Author(s):
 #   Tom Parker <tparker@usgs.gov>
 
-""" fetch webcam images."""
+""" push webcam images."""
 
 
 import os
@@ -16,32 +16,31 @@ import zmq
 import tomputils.util as tutil
 
 
-class Fetcher:
-    def __init__(self, config, proxy_backend, context=None):
+class Pusher:
+    def __init__(self, config, proxy_frontend, context=None):
         global logger
         logger = tutil.setup_logging("fetcher errors")
 
         self.config = config
         self.context = context or zmq.Context().instance()
-        self.socket = self.context.socket(zmq.PUB)
-        logger.debug("Connecting to proxy on {}".format(proxy_backend))
-        self.socket.connect(proxy_backend)
+        self.socket = self.context.socket(zmq.SUB)
+        logger.debug("Connecting to proxy on {}".format(proxy_frontend))
+        self.socket.connect(proxy_frontend)
 
-    def fetch(self):
+    def push(self):
         pass
 
 
-class RsyncFetcher(Fetcher):
-    def fetch(self):
+class RsyncPusher(Pusher):
+    def push(self):
         rsync = ['rsync']
         rsync.append("--verbose")
         rsync.append("--prune-empty-dirs")
         rsync.append("--compress")
         rsync.append("--archive")
-        rsync.append("--delete")
         rsync.append("--rsh ssh")
-        rsync.append("{}:{}".format(self.config['name'], self.config['path']))
         rsync.append(self.config['scratch_dir'])
+        rsync.append("{}:{}".format(self.config['name'], self.config['path']))
         rsync_cmd = " ".join(rsync)
         logger.debug("rsync: %s", rsync_cmd)
         output = os.popen(rsync_cmd, 'r')
@@ -59,16 +58,9 @@ class RsyncFetcher(Fetcher):
                      len(new_images))
 
 
-def _is_image(self, name):
-    if name.endswith('.jpg'):
-        return True
-    else:
-        return False
-
-
-def fetcher_factory(config, proxy_backend):
+def pusher_factory(config, proxy_frontend):
     if config['type'] == 'rsync':
-        return RsyncFetcher(config, proxy_backend)
+        return RsyncPusher(config, proxy_frontend)
     else:
-        error_msg = "Unkown fetcher type {} for source {}"
+        error_msg = "Unkown pusher type {} for source {}"
         tutil.exit_with_error(error_msg.format(config['type'], config['name']))

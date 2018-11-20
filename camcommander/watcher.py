@@ -7,7 +7,7 @@
 # Author(s):
 #   Tom Parker <tparker@usgs.gov>
 
-""" fetch webcam images."""
+""" watch for new webcam images."""
 
 
 import zmq
@@ -25,15 +25,12 @@ class Watcher:
         self.socket = self.context.socket(zmq.SUB)
         self.socket.connect(proxy_frontend)
 
-    def start(self):
-        self.watch()
-
     def watch(self):
         pass
 
 
 def watcher_factory(config, proxy_frontend):
-    if config['name'] == 'console':
+    if config['type'] == 'console':
         msg = "Creating %s watcher %s."
         logger.debug(msg.format(config['name'], config['type']))
         return ConsoleWatcher(config, proxy_frontend)
@@ -47,4 +44,4 @@ class ConsoleWatcher(Watcher):
         run = True
         while run:
             image = self.socket.recv()
-            logger.info("New Images: %s", image)
+            logger.info("New Image: %s", image)

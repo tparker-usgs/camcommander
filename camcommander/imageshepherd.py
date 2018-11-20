@@ -29,25 +29,6 @@ PROXY_BACKEND = "tcp://127.0.0.1:5559"
 global_config = None
 
 
-def deliver_images(config):
-    logger.debug("Shipping images to %s", config['name'])
-    rsync = ['rsync']
-    rsync.append("-n")
-    rsync.append("--verbose --prune-empty-dirs --compress --archive --rsh ssh")
-    rsync.append(config['scratch_dir'])
-    rsync.append("{}:{}".format(config['name'], config['path']))
-    rsync_cmd = " ".join(rsync)
-    logger.debug("rsync: %s", rsync_cmd)
-    # output = os.popen(rsync_cmd, 'r')
-    # for line in output:
-    #     line = line.strip()
-    #     if line.endswith(".jpg"):
-    #         logger.info("Sent image %s", line)
-    #     else:
-    #         logger.debug("yada yada yada %s", line)
-    logger.debug("Images delivered to %s", config['name'])
-
-
 def start_proxy():
     logger.info("Starting proxy")
     device = ThreadDevice(zmq.FORWARDER, zmq.XSUB, zmq.XPUB)
@@ -61,7 +42,7 @@ def start_proxy():
 def start_fetchers(sources):
     for source in sources:
         fetcher = fetcher_factory(source, PROXY_BACKEND)
-        _thread.start_new_thread(fetcher.start, ())
+        _thread.start_new_thread(fetcher.fetch, ())
         logger.debug("Launched fetcher %s".format(source['name']))
 
 
@@ -72,7 +53,7 @@ def start_shippers():
 def start_watchers(watchers):
     for watcher in watchers:
         watcher = watcher_factory(global_config, PROXY_FRONTEND)
-    _thread.start_new_thread(watcher.start, ())
+    _thread.start_new_thread(watcher.watch, ())
     logger.debug("Launched watcher %s".format(watcher['name']))
 
 
