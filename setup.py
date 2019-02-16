@@ -27,7 +27,7 @@ setup(
         'request',
         'msgpack',
         'pyzmq',
-        'tomputils>=1.12.1',
+        'tomputils>=1.12.3',
         'single',
         'multiprocessing-logging',
         'svn',
