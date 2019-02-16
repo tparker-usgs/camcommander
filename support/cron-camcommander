@@ -1,5 +1,5 @@
 # Gather and maintain my configs
-*/5 * * * * /usr/local/bin/configupdater
+*/5 * * * * configupdater
 
 # pulse the web relays
 * * * * * [ -f "$WRP_CONFIG_PATH" ] && webrelaypoker || echo > /dev/null
