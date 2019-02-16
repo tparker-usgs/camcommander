@@ -64,3 +64,7 @@ def pusher_factory(config, proxy_frontend):
     else:
         error_msg = "Unkown pusher type {} for source {}"
         tutil.exit_with_error(error_msg.format(config['type'], config['name']))
+
+
+def _is_image(image):
+    pass
