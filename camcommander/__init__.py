@@ -16,4 +16,4 @@ Tools to handle webcam images.
 """
 
 
-__version__ = "1.1.4"
+__version__ = "1.1.5"
