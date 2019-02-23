@@ -19,7 +19,7 @@ import tomputils.util as tutil
 class Pusher:
     def __init__(self, config, proxy_frontend, context=None):
         global logger
-        logger = tutil.setup_logging("fetcher errors")
+        logger = tutil.setup_logging("pusher errors")
 
         self.config = config
         self.context = context or zmq.Context().instance()
