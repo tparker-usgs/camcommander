@@ -33,18 +33,18 @@ class Fetcher:
 
 class RsyncFetcher(Fetcher):
     def fetch(self):
-        rsync = ['rsync']
+        rsync = ["rsync"]
         rsync.append("--verbose")
         rsync.append("--prune-empty-dirs")
         rsync.append("--compress")
         rsync.append("--archive")
         rsync.append("--delete")
         rsync.append("--rsh ssh")
-        rsync.append("{}:{}".format(self.config['name'], self.config['path']))
-        rsync.append(self.config['scratch_dir'])
+        rsync.append("{}:{}".format(self.config["name"], self.config["path"]))
+        rsync.append(self.config["scratch_dir"])
         rsync_cmd = " ".join(rsync)
         logger.debug("rsync: %s", rsync_cmd)
-        output = os.popen(rsync_cmd, 'r')
+        output = os.popen(rsync_cmd, "r")
         new_images = []
         for line in output:
             line = line.strip()
@@ -55,20 +55,21 @@ class RsyncFetcher(Fetcher):
                 new_images.append(line)
             else:
                 logger.debug("yada yada yada %s", line)
-        logger.debug("All done with %s, new images: %d", self.config['name'],
-                     len(new_images))
+        logger.debug(
+            "All done with %s, new images: %d", self.config["name"], len(new_images)
+        )
 
 
 def _is_image(self, name):
-    if name.endswith('.jpg'):
+    if name.endswith(".jpg"):
         return True
     else:
         return False
 
 
 def fetcher_factory(config, proxy_backend):
-    if config['type'] == 'rsync':
+    if config["type"] == "rsync":
         return RsyncFetcher(config, proxy_backend)
     else:
         error_msg = "Unkown fetcher type {} for source {}"
-        tutil.exit_with_error(error_msg.format(config['type'], config['name']))
+        tutil.exit_with_error(error_msg.format(config["type"], config["name"]))

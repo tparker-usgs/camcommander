@@ -21,8 +21,8 @@ import zmq
 from zmq.devices import ThreadDevice
 
 
-CONFIG_FILE_ENV = 'IS_CONFIG_PATH'
-REMOTE_PATTERN = '/*/%Y/%m/%d/*.jpg'
+CONFIG_FILE_ENV = "IS_CONFIG_PATH"
+REMOTE_PATTERN = "/*/%Y/%m/%d/*.jpg"
 PROXY_FRONTEND = "tcp://127.0.0.1:5560"
 PROXY_BACKEND = "tcp://127.0.0.1:5559"
 
@@ -43,7 +43,7 @@ def start_fetchers(sources):
     for source in sources:
         fetcher = fetcher_factory(source, PROXY_BACKEND)
         _thread.start_new_thread(fetcher.fetch, ())
-        logger.debug("Launched fetcher %s".format(source['name']))
+        logger.debug("Launched fetcher %s".format(source["name"]))
 
 
 def start_shippers():
@@ -54,7 +54,7 @@ def start_watchers(watchers):
     for watcher in watchers:
         watcher = watcher_factory(global_config, PROXY_FRONTEND)
     _thread.start_new_thread(watcher.watch, ())
-    logger.debug("Launched watcher %s".format(watcher['name']))
+    logger.debug("Launched watcher %s".format(watcher["name"]))
 
 
 def main():
@@ -80,14 +80,14 @@ def main():
         time.sleep(1)
 
     device = start_proxy()
-    if 'watchers' in global_config:
-        start_watchers(global_config['watchers'])
+    if "watchers" in global_config:
+        start_watchers(global_config["watchers"])
     start_shippers()
-    start_fetchers(global_config['sources'])
+    start_fetchers(global_config["sources"])
 
     logger.info("Waiting for proxy to die")
     device.join()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -30,13 +30,13 @@ class Watcher:
 
 
 def watcher_factory(config, proxy_frontend):
-    if config['type'] == 'console':
+    if config["type"] == "console":
         msg = "Creating %s watcher %s."
-        logger.debug(msg.format(config['name'], config['type']))
+        logger.debug(msg.format(config["name"], config["type"]))
         return ConsoleWatcher(config, proxy_frontend)
     else:
         error_msg = "Unkown watcher type %s for source %s"
-        tutil.exit_with_error(error_msg.format(config['type'], config['name']))
+        tutil.exit_with_error(error_msg.format(config["type"], config["name"]))
 
 
 class ConsoleWatcher(Watcher):
