@@ -33,17 +33,17 @@ class Pusher:
 
 class RsyncPusher(Pusher):
     def push(self):
-        rsync = ['rsync']
+        rsync = ["rsync"]
         rsync.append("--verbose")
         rsync.append("--prune-empty-dirs")
         rsync.append("--compress")
         rsync.append("--archive")
         rsync.append("--rsh ssh")
-        rsync.append(self.config['scratch_dir'])
-        rsync.append("{}:{}".format(self.config['name'], self.config['path']))
+        rsync.append(self.config["scratch_dir"])
+        rsync.append("{}:{}".format(self.config["name"], self.config["path"]))
         rsync_cmd = " ".join(rsync)
         logger.debug("rsync: %s", rsync_cmd)
-        output = os.popen(rsync_cmd, 'r')
+        output = os.popen(rsync_cmd, "r")
         new_images = []
         for line in output:
             line = line.strip()
@@ -54,16 +54,17 @@ class RsyncPusher(Pusher):
                 new_images.append(line)
             else:
                 logger.debug("yada yada yada %s", line)
-        logger.debug("All done with %s, new images: %d", self.config['name'],
-                     len(new_images))
+        logger.debug(
+            "All done with %s, new images: %d", self.config["name"], len(new_images)
+        )
 
 
 def pusher_factory(config, proxy_frontend):
-    if config['type'] == 'rsync':
+    if config["type"] == "rsync":
         return RsyncPusher(config, proxy_frontend)
     else:
         error_msg = "Unkown pusher type {} for source {}"
-        tutil.exit_with_error(error_msg.format(config['type'], config['name']))
+        tutil.exit_with_error(error_msg.format(config["type"], config["name"]))
 
 
 def _is_image(image):

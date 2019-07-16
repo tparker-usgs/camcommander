@@ -20,44 +20,50 @@ import multiprocessing_logging
 import requests
 
 
-CONFIG_FILE_ENV = 'WRP_CONFIG_PATH'
-URL_TMPL = Template("http://${address}:${port}/state.xml"
-                    "?relay${relayidx}State=2"
-                    "&pulseTime${relayidx}=${pulse_duration}")
+CONFIG_FILE_ENV = "WRP_CONFIG_PATH"
+URL_TMPL = Template(
+    "http://${address}:${port}/state.xml"
+    "?relay${relayidx}State=2"
+    "&pulseTime${relayidx}=${pulse_duration}"
+)
 
 
 def poke_relay(relay):
     try:
         url = URL_TMPL.substitute(relay)
-        logger.debug("Poking %s at %s", relay['name'], url)
-        r = requests.get(url, timeout=relay['timeout'])
+        logger.debug("Poking %s at %s", relay["name"], url)
+        r = requests.get(url, timeout=relay["timeout"])
         r.raise_for_status()
         logger.info("Poked.")
     except requests.exceptions.ConnectionError:
         # The web relay doesn't return headers when sent a sate.xml request
         # urllib3 doesn't support HTTP/0.9 requests. What's to be done?
-        msg = "Web relay connection error. This is normal as the webrelay" \
-              + "doesn't provide a valid HTTP response to state.xml " \
-              + " requests, but it may also obscure other problems."
+        msg = (
+            "Web relay connection error. This is normal as the webrelay"
+            + "doesn't provide a valid HTTP response to state.xml "
+            + " requests, but it may also obscure other problems."
+        )
         logging.info(msg)
     except requests.exceptions.ReadTimeout:
-        logging.info("Time-out poking %s", relay['name'])
+        logging.info("Time-out poking %s", relay["name"])
     except requests.exceptions.RequestException:
-        logging.exception("%s resisted.", relay['name'])
+        logging.exception("%s resisted.", relay["name"])
     finally:
         for handler in logger.handlers:
             handler.flush()
 
 
 def validate_relay(relay):
-    if relay['minute_offset'] >= relay['interval']:
-        logger.error("minute_offset must be smaller than interval."
-                     "(%d >= %d)", relay['minute_offset'],
-                     relay['interval'])
+    if relay["minute_offset"] >= relay["interval"]:
+        logger.error(
+            "minute_offset must be smaller than interval." "(%d >= %d)",
+            relay["minute_offset"],
+            relay["interval"],
+        )
         return False
 
-    if relay['disabled']:
-        logger.debug("Skipping %s, it's disabled.", relay['name'])
+    if relay["disabled"]:
+        logger.debug("Skipping %s, it's disabled.", relay["name"])
         return False
 
     return True
@@ -68,15 +74,20 @@ def fork_poke_proc(relay):
         return None
 
     minute = math.floor(time.time() / 60)
-    minute_offset = minute % relay['interval']
+    minute_offset = minute % relay["interval"]
     p = None
-    if minute_offset == relay['minute_offset']:
+    if minute_offset == relay["minute_offset"]:
         p = Process(target=poke_relay, args=(relay,))
         p.start()
     else:
-        logger.debug("Skipping %s, %d %% %d == %d not %d", relay['name'],
-                     minute, relay['interval'], minute_offset,
-                     relay['minute_offset'])
+        logger.debug(
+            "Skipping %s, %d %% %d == %d not %d",
+            relay["name"],
+            minute,
+            relay["interval"],
+            minute_offset,
+            relay["minute_offset"],
+        )
 
     return p
 
@@ -100,7 +111,7 @@ def main():
     multiprocessing_logging.install_mp_handler()
 
     config = tutil.parse_config(tutil.get_env_var(CONFIG_FILE_ENV))
-    procs = poke_relays(config['relays'])
+    procs = poke_relays(config["relays"])
     for proc in procs:
         proc.join()
 
@@ -108,5 +119,5 @@ def main():
     logging.shutdown()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
