@@ -16,4 +16,8 @@ Tools to handle webcam images.
 """
 
 
-__version__ = "1.1.1"
+import tomputils.util as tutil
+from camcommander.version import __version__
+
+logger = tutil.setup_logging("camcommander - errors")
+__all__ = ['__version__']

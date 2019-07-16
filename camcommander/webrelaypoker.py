@@ -63,22 +63,30 @@ def validate_relay(relay):
     return True
 
 
+def fork_poke_proc(relay):
+    if not validate_relay(relay):
+        return None
+
+    minute = math.floor(time.time() / 60)
+    minute_offset = minute % relay['interval']
+    p = None
+    if minute_offset == relay['minute_offset']:
+        p = Process(target=poke_relay, args=(relay,))
+        p.start()
+    else:
+        logger.debug("Skipping %s, %d %% %d == %d not %d", relay['name'],
+                     minute, relay['interval'], minute_offset,
+                     relay['minute_offset'])
+
+    return p
+
+
 def poke_relays(relays):
     procs = []
-    minute = math.floor(time.time() / 60)
     for relay in relays:
-        if not validate_relay(relay):
-            continue
-
-        minute_offset = minute % relay['interval']
-        if minute_offset == relay['minute_offset']:
-            p = Process(target=poke_relay, args=(relay,))
-            procs.append(p)
-            p.start()
-        else:
-            logger.debug("Skipping %s, %d %% %d == %d not %d", relay['name'],
-                         minute, relay['interval'], minute_offset,
-                         relay['minute_offset'])
+        proc = fork_poke_proc(relay)
+        if proc:
+            procs.append(proc)
 
     return procs
 
